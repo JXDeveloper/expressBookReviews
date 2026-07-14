@@ -1,0 +1,11 @@
+1.
+curl http://localhost:5000/isbn/1    
+  {"author":"Chinua Achebe","title":"Things Fall Apart","reviews":{}}
+
+2.
+curl http://localhost:5000/isbn/2
+  {"author":"Hans Christian Andersen","title":"Fairy tales","reviews":{}}
+
+3.
+curl http://localhost:5000/isbn/12
+  {"message":"Book was not found"}
