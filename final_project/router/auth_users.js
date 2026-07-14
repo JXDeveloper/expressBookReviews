@@ -56,9 +56,19 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
     });
   }
 
-  let username = req.session.authorization["username"];
+  const username = req.session.authorization["username"];
   books[isbn].reviews[username] = review;
   return res.status(200).json({ message: `@${username} review is set to '${books[isbn].reviews[username]}'!` });
+});
+
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+  const isbn = req.params.isbn;
+  const username = req.session.authorization["username"];
+  if (books[isbn].reviews[username]) {
+    delete books[isbn].reviews[username];
+    return res.status(200).json({ message: `@${username} review is deleted` });
+  }
+  return res.status(200).json({ message: `@${username} had no review` });
 });
 
 module.exports.authenticated = regd_users;
