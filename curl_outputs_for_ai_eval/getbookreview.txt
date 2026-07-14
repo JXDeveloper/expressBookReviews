@@ -1,0 +1,11 @@
+1.
+curl http://localhost:5000/review/1 
+  {"reviews":{}}
+
+2.
+curl http://localhost:5000/review/2
+  {"reviews":{}}
+
+3.
+curl http://localhost:5000/review/12
+  {"message":"Book was not found with this ISBN"}
