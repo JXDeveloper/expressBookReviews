@@ -34,7 +34,9 @@ public_users.get("/author/:author", function (req, res) {
         resultant_books.books.push(book);
       }
     }
-
+    if (resultant_books.books.length === 0) {
+      return res.status(200).send({ message: "No book found of this author!" });
+    }
     return res.status(200).send(JSON.stringify(resultant_books, null, 4));
   }
   return res.status(400).json({
@@ -45,8 +47,23 @@ public_users.get("/author/:author", function (req, res) {
 
 // Get all books based on title
 public_users.get("/title/:title", function (req, res) {
-  //Write your code here
-  return res.status(300).json({ message: "Yet to be implemented" });
+  const title = req.params.title;
+  if (title) {
+    const resultant_books = { books: [] };
+    for (const book of Object.values(books)) {
+      if (book.title === title) {
+        resultant_books.books.push(book);
+      }
+    }
+    if (resultant_books.books.length === 0) {
+      return res.status(200).send({ message: "No book found with this title!" });
+    }
+    return res.status(200).send(JSON.stringify(resultant_books, null, 4));
+  }
+  return res.status(400).json({
+    error: "bad request",
+    message: "Missing required field: 'title'",
+  });
 });
 
 //  Get book review

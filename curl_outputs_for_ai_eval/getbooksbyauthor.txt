@@ -36,3 +36,7 @@ curl http://localhost:5000/author/Unknown
       }
     ]
   }
+
+3.
+http://localhost:5000/author/random 
+  {"message":"No book found of this author!"}
