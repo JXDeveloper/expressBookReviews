@@ -1,5 +1,4 @@
 const express = require("express");
-const axios = require("axios");
 let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
@@ -32,7 +31,7 @@ public_users.post("/register", (req, res) => {
   return res.status(200).json({ message: `user with username @${username} registered successfully` });
 });
 
-const getAllUsers = () =>
+const getAllBooks = () =>
   new Promise((res, rej) => {
     res(books);
   });
@@ -44,14 +43,22 @@ public_users.get("/", function (req, res) {
     .catch((err) => res.status(400).json({ error: "internal server error", message: "unable to get books data" }));
 });
 
+const getBookByISBN = (isbn) =>
+  new Promise((res, rej) => {
+    res(books[isbn]);
+  });
+
 // Get book details based on ISBN
 public_users.get("/isbn/:isbn", function (req, res) {
-  const book = books[req.params.isbn];
-
-  if (book) {
-    return res.status(200).send(JSON.stringify(book));
-  }
-  return res.status(200).json({ message: "Book was not found" });
+  const isbn = req.params.isbn;
+  return getBookByISBN(isbn)
+    .then((book) => {
+      if (!book) {
+        return res.status(200).json({ message: "Book was not found" });
+      }
+      res.status(200).send(JSON.stringify(book, null, 4));
+    })
+    .catch((err) => res.status(400).json({ error: "internal server error", message: "unable to get books data" }));
 });
 
 // Get book details based on author
