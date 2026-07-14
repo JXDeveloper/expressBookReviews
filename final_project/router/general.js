@@ -26,8 +26,21 @@ public_users.get("/isbn/:isbn", function (req, res) {
 
 // Get book details based on author
 public_users.get("/author/:author", function (req, res) {
-  //Write your code here
-  return res.status(300).json({ message: "Yet to be implemented" });
+  const author = req.params.author;
+  if (author) {
+    const resultant_books = { books: [] };
+    for (const book of Object.values(books)) {
+      if (book.author === author) {
+        resultant_books.books.push(book);
+      }
+    }
+
+    return res.status(200).send(JSON.stringify(resultant_books, null, 4));
+  }
+  return res.status(400).json({
+    error: "bad request",
+    message: "Missing required field: 'author'",
+  });
 });
 
 // Get all books based on title
