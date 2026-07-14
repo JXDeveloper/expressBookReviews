@@ -61,20 +61,30 @@ public_users.get("/isbn/:isbn", function (req, res) {
     .catch((err) => res.status(400).json({ error: "internal server error", message: "unable to get books data" }));
 });
 
-// Get book details based on author
-public_users.get("/author/:author", function (req, res) {
-  const author = req.params.author;
-  if (author) {
+const getBookByAuthor = (author) => {
+  return new Promise((res, rej) => {
     const resultant_books = { books: [] };
     for (const book of Object.values(books)) {
       if (book.author === author) {
         resultant_books.books.push(book);
       }
     }
-    if (resultant_books.books.length === 0) {
-      return res.status(200).send({ message: "No book found of this author!" });
-    }
-    return res.status(200).send(JSON.stringify(resultant_books, null, 4));
+    res(resultant_books);
+  });
+};
+
+// Get book details based on author
+public_users.get("/author/:author", function (req, res) {
+  const author = req.params.author;
+  if (author) {
+    return getBookByAuthor(author)
+      .then((resultant_books) => {
+        if (resultant_books.books.length === 0) {
+          return res.status(200).send({ message: "No book found of this author!" });
+        }
+        return res.status(200).send(JSON.stringify(resultant_books, null, 4));
+      })
+      .catch((err) => res.status(400).json({ error: "internal server error", message: "unable to get books data" }));
   }
   return res.status(400).json({
     error: "bad request",
