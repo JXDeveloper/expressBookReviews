@@ -92,20 +92,30 @@ public_users.get("/author/:author", function (req, res) {
   });
 });
 
-// Get all books based on title
-public_users.get("/title/:title", function (req, res) {
-  const title = req.params.title;
-  if (title) {
+const getBookByTitle = (title) => {
+  return new Promise((res, rej) => {
     const resultant_books = { books: [] };
     for (const book of Object.values(books)) {
       if (book.title === title) {
         resultant_books.books.push(book);
       }
     }
-    if (resultant_books.books.length === 0) {
-      return res.status(200).send({ message: "No book found with this title!" });
-    }
-    return res.status(200).send(JSON.stringify(resultant_books, null, 4));
+    res(resultant_books);
+  });
+};
+
+// Get all books based on title
+public_users.get("/title/:title", function (req, res) {
+  const title = req.params.title;
+  if (title) {
+    return getBookByTitle(title)
+      .then((resultant_books) => {
+        if (resultant_books.books.length === 0) {
+          return res.status(200).send({ message: "No book found of this title!" });
+        }
+        return res.status(200).send(JSON.stringify(resultant_books, null, 4));
+      })
+      .catch((err) => res.status(400).json({ error: "internal server error", message: "unable to get books data" }));
   }
   return res.status(400).json({
     error: "bad request",
