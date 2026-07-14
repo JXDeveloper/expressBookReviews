@@ -1,0 +1,19 @@
+1.
+curl -X POST http://localhost:5000/register -H "Content-Type: application/json" -d '{"username": "user1", "password": "pass1"}'                     
+  {"message":"user with username @user1 registered successfully"}
+
+2.
+curl -c cookies.txt -X POST http://localhost:5000/customer/login -H "Content-Type: application/json" -d '{"username": "user1", "password": "pass1"}'
+  User successfully logged in
+
+3.
+curl -b cookies.txt -X PUT http://localhost:5000/customer/auth/review/1 -H "Content-Type: application/json" -d '{"review":"my review"}'             
+  {"message":"@user1 review is set to 'my review'!"}
+
+4.
+curl -b cookies.txt -X PUT http://localhost:5000/customer/auth/review/1 -H "Content-Type: application/json" -d '{"review":"my review 2"}'
+  {"message":"@user1 review is set to 'my review 2'!"}
+
+5.
+curl -b cookies.txt -X PUT http://localhost:5000/customer/auth/review/1 -H "Content-Type: application/json"                              
+  {"error":"bad request","message":"Missing required field: 'review'"}
